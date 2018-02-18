@@ -1,0 +1,5 @@
+* NetBSD-libc/CVE-2006-6652/glob3/*_bad.c: The model checker we used
+for testing claims these cases are SAFE, but I can manually confirm
+that there are overflows by executing the testcases.
+
+

@@ -1,0 +1,114 @@
+Simplifications applied to testcases (duplicate simplifications are omitted); includes simplifications applied to already simplified testcases, not just the "base" case.
+
+Generic simplifications
+=======================
+
+(LANG) Eliminate register, enum, static; replace a = b >=c with if (b >= c) a = 1; else a = 0; (sometimes) rewrite for loops as while or do/while
+
+(PTR_ARR) Replace pointer ops with array ops
+
+(INLINE) Merge body of called function into caller
+
+sendmail
+========
+
+Note: the sendmail simplifications were initially applied to Zitser's model programs, not the original source.
+
+CVE-1999-0047
+-------------
+
+(PACKAGE)
+  Remove header, envelope structs; replace envelope, which contains input, by a char[]
+  Remove header field extraction
+  Remove test of header field
+
+(NUM_INPUT) In loop which iterates over string input, reduce number of input characters which are read, tested, and copied to dest buffer per iteration (initially three)
+
+(FGET) Replace fgetc by nondet stub
+
+(INPUT_DEP) Simplify/remove branches on input value
+
+(CONV) Remove input char conversion (by table lookup)
+
+(BIT) Remove bitmasking of input
+
+(COND) Simplify branch conditions (factored out ||-disjuncts)
+
+
+CVE-1999-0206
+-------------
+
+PACKAGE CONV BIT BRANCH PTR_ARR
+
+(CONST_PROP) Remove "state" variable (which is always 0 in Zitser)
+  Removed branch on state
+
+FGET Remove loop over fgets
+
+(DEREF) Replaced char** by char*
+
+
+CVE-2001-0653
+-------------
+
+BRANCH NUM_INPUT
+
+Remove switch on getopt (vulnerable function only called for specific cmdline arg)
+
+(INPUT_LOOP) Remove loop over input (so first input substring has to produce overflow)
+
+Simplify multiple-side-effect statement
+
+Remove code which computes value to write into dest buf
+
+
+CVE-2002-0906
+-------------
+
+CONST_PROP PACKAGE INPUT_LOOP
+
+FGET Remove reading input from file (replaced with uninitialized char[])
+
+Remove testing of input length which guards call to vuln function
+
+(USELESS) Remove useless extraction of values from input
+
+Remove switch cases which don't contain a vulnerability (and which are unreachable in Zitser since input is rigged)
+
+
+CVE-2002-1337
+-------------
+
+FGET Replace scanf with uninit char[]
+
+INPUT_DEP
+  Remove skipping over leading spaces
+  Remove handling backslashed, quoted, parenthesized, bracketed substrings
+  Remove checking for input that "must be quoted"
+
+STATE
+  Remove a lot of context-sensitive testing, counting, and copying of input
+  Remove handling of context variables which track, e.g., bracket nesting depth
+
+
+CVE-2003-0161
+-------------
+
+CONST_PROP PACKAGE INPUT_LOOP
+
+INPUT_DEP Remove an embedded FSM which is driven by (table lookup of) input chars
+
+
+CVE-2003-0681
+-------------
+
+PACKAGE
+
+(SLICE) Remove all useless code in calling context of vulnerable function
+  -- Zitser seems to have retained a lot of useless code in this one for some reason
+
+FGET Replace lookup of passwd information with uninit char[]
+
+INPUT_DEP Remove code which computes length of expanded input (subsequent code just blindly copies the expanded input into dest anyway)
+
+CONV Remove code which uppercases input after copying it

@@ -1,0 +1,161 @@
+Vulnerability Classification
+============================
+
+length: for all inputs of a sufficient length, there exists an environment (valuation of uninitialized variables and parameters) in which the input obtains an overflow
+content: not length
+
+lib: overflow occurs in library function
+
+apache
+======
+
+CVE-2004-0940
+content
+not lib
+-- bad variant requires even BASE_SZ (?)
+-- must link ../apache.c
+-- covert: dep. on BASE_SZ in simplest bad, iter1_prefixShort_arr_bad.c
+
+CVE-2006-3747
+content
+not lib
+-- covert doesn't seem to do anything on simp1; doesn't print a "conformance relation" line; outputs the same thing for bad and ok
+
+bind
+====
+
+CA-1999-14
+content
+lib: memcpy
+-- need to link bind.c
+-- covert: used --overflow-asgn; doesn't seem to do anything for simplest bad, simp_bad.c
+
+CVE-2001-0011
+length?
+lib: strcpy (originally sprintf)/strncpy (in ok variant)
+-- covert: used --overflow-strcpy; indep. of BASE_SZ in {small,med}_bad, small_ok; churns on med_ok, BASE_SZ 2 (killed it at iteration #93)
+
+edbrowse
+========
+
+CVE-2006-6909
+content
+lib: strcpy
+-- covert: used --overflow-strcpy; indep. of BASE_SZ in strchr_bad; churns on strchr_ok
+
+gxine
+=====
+
+CVE-2007-0406
+length?
+lib: strcpy
+-- covert: used --overflow-strcpy; indep. of BASE_SZ on bad and ok; not surprising since the testcase is essentially str(n)cpy
+
+libgd
+=====
+
+CVE-2007-0455
+content
+not lib
+** actually a buffer overread; added redundant assignment to induce overflow
+-- covert dep. on BASE_SZ in gd_simp_bad; finds overflow in gd_simp_ok (false alarm)
+
+MADWiFi
+=======
+
+CVE-2006-6332
+length
+lib: sprintf (removed), memcpy
+-- covert: --overflow-ac; dep. on BASE_SZ in encode_ie/{no_sprintf,interproc}_{bad,ok}
+-- covert: --overflow-asgn; no useful output for giwscan_cb/giwscan_cb_bad; crashes ok giwscan_cb_ok
+
+NetBSD-libc
+===========
+
+CVE-2006-6652
+content
+not lib
+-- covert: no useful results for glob1; same for cases in glob2 ...
+
+OpenSER
+=======
+
+CVE-2006-6749
+content
+lib: strncpy
+-- covert: finds overflow in the simplest ok variant, parse_expression/guard_random_index_ok.c (false alarm)
+
+CVE-2006-6876
+content
+lib: strcpy
+-- covert: finds overflow in the simplest ok variant, fetchsms/istrstr_ok.c (false alarm)
+
+samba
+=====
+
+CVE-2007-0453
+length
+lib: strncpy
+-- covert: this is just strncpy; skipped
+
+sendmail
+========
+
+CVE-1999-0047
+content
+not lib
+
+CVE-1999-0206
+content
+not lib
+
+CVE-2001-0653
+content
+not lib
+
+CVE-2002-0906
+content
+lib: strncpy
+-- covert: used --overflow-strcpy; indep. of BASE_SZ
+
+CVE-2002-1337
+content
+not lib
+
+CVE-2003-0161
+content
+not lib
+
+CVE-2003-0681
+content
+lib: strcpy
+-- covert: used --overflow-strcpy; indep. of BASE_SZ on bad case; churns on ok case
+
+SpamAssassin
+============
+
+BID-6679
+content
+not lib
+-- covert: gets stuck on loop_bad with BASE_SZ 2
+
+wu-ftpd
+=======
+
+CVE-1999-0368
+content
+lib: strcat, strcpy
+-- note: need to link wu-ftpd.c
+-- covert: used --overflow-strcpy; indep. of BASE_SZ on realpath-curpath/simple_{bad,ok}.c
+-- covert: used --overflow-strcat; indep. of BASE_SZ on realpath-namebuf/strcpy_strcat_{bad,ok}, iter_ints_simp_{bad,ok}, iter_ints_{bad,ok}
+
+CVE-1999-0878
+length
+lib: strcpy
+-- this vuln. is incomplete; skipped
+
+CVE-2003-0466
+content?
+lib: strcat
+-- note: need to link wu-ftpd.c
+-- covert: used --overflow-strcat; indep. of BASE_SZ in simple_bad.c; Simplify error in simple_ok.c

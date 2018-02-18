@@ -1,0 +1,48 @@
+Changelog for Revision 0.2:
+
+* stubs.c (istrstr): return -1 on failure, rather than NULL; this
+matches expected usage at call sites.
+
+* stubs.c (r_strncpy,r_memcpy): guard array access dest[n-1]
+
+* stubs.c: correct compilation errors on GCC
+(strcpy,strlen): make type qualifiers consistent with stubs.h
+(r_memcpy,memcpy): make two versions, one which does no typecasting
+but dereferences void pointers, and one which typecasts void pointers
+to unsigned char pointers; control with TYPECAST_MEMCPY in stubs.h
+
+* MADWiFi/CVE-2006-6332/constants.h: change BUFSZ so that bufsize > 2
+  check succeeds
+
+* MADWiFi/CVE-2006-6332/encode_ie/*ok.c: use corrected patch from
+MadWiFi project
+
+* bind/CA-1999-14/rrextract-nxt/*.c: ensure that n >= dlen so that n2
+cannot be negative
+
+* bind/CA-1999-14/rrextract-nxt/*.c: consistently use SPACE_FOR_VARS,
+and ensure that SPACE_FOR_VARS is big enough to allow the program to
+chomp through all variables it reads from the input without aborting
+early
+
+* bind/CVE-2001-0011/nslookupComplain/*.c: conflate two calls to
+strcpy/strncpy, since they're exactly the same, and one is currently
+unreachable
+
+* SpamAssassin/BID-6679/constants.h: increase BUFSZ to ensure that
+limit >= 0
+
+* NetBSD-libc/CVE-2006-6652/glob3/glob3_*.c: remove extraneous things to check
+glob3_ptr_{bad,ok}.c: remove /* BAD */ and /* OK */ comments from
+dereferences of pathend, which doesn't change
+glob3_ptr_{bad,ok}.c: change two accesses pathend[i] to pathend[0] in
+order to match semantics of original sources, and remove /* BAD */ and
+/* OK */ comments as with the ptr versions
+
+* NetBSD-libc/CVE-2006-6652/glob3/*.c: Fix broken loops which caused
+  overflows in OK testcases
+
+* OpenSER/CVE-2006-6876/constants.h: Increase PDUSIZE by 2 to account
+  for two '\r' characters so that call to r_strcpy is reachable
+
+* sendmail/CVE-2003-0681/buildfname: Completely new breakdown of the testcases.
